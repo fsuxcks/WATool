@@ -52,8 +52,8 @@ def CreateNewUser(name, tg):
         sheet.update_cell(user, 2, name)
         sheet.update_cell(user, 6, tg)
         sheet.update_cell(user, 3, "Trial")
-        messagebox.showinfo("Регистрация", "Срок вашего пробного периода закончился. Вам доступна только Trial версия. За покупкой Pro-версии t.me/emil_mmd")
-        return True
+        messagebox.showinfo("Регистрация", "Срок вашего пробного периода закончился. Вам доступна только Trial версия. Пожалуйста перезапустите программу. За покупкой Pro-версии t.me/emil_mmd")
+        return 3
     else:
         newuser = len(trialusers) + 1
         newusersid = sheet.col_values(6)

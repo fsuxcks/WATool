@@ -585,25 +585,23 @@ class MainUI:
 
     def startingerror(self, index, version, ID, current_version, LinkID, changelog):
         def regnewuser():
-            try:
-                errorlabel.place_forget()
-            except:
-                pass
+            errorlabel = ctk.CTkLabel(frame, text="")
             from utility import CreateNewUser
             name = nickenter.get()
             if name.strip() == "":
-                errorlabel = ctk.CTkLabel(frame, text="Пожалуйста заполните поле", font=("Arial", 12), text_color="red")
+                errorlabel.configure(text="Пожалуйста заполните поле", font=("Arial", 12), text_color="red")
                 errorlabel.place(x=20, y=130)
                 return
             tg = tgenter.get()
             k = CreateNewUser(name, tg)
             if k == 2:
-                errorlabel = ctk.CTkLabel(frame, text="Имя пользователя занято", font=("Arial", 12), text_color="red")
+                errorlabel.configure(text="Имя пользователя занято", font=("Arial", 12), text_color="red")
                 errorlabel.place(x=20, y=130)
                 return
-            errorlabel = ctk.CTkLabel(frame, text="Успешно!", font=("Arial", 12), text_color="green")
+            errorlabel.configure(text="Успешная регистрация!", font=("Arial", 12), text_color="green")
             errorlabel.place(x=20, y=130)
-            messagebox.showinfo("Регистрация", "Регистрация завершена! Пожалуйста перезапустите программу.")
+            if k != 3:
+                messagebox.showinfo("Регистрация", "Регистрация завершена! Пожалуйста перезапустите программу.")
             self.app.destroy()
             sys.exit()
 
