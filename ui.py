@@ -583,7 +583,7 @@ class MainUI:
         mode_combobox.place(x=20, y=44)
         self.mode_label.place(x=20, y=7)
 
-    def startingerror(self, index, version, ID, current_version, LinkID, changelog):
+    def startingerror(self, index, version, current_version, changelog, name, status):
         def regnewuser():
             errorlabel = ctk.CTkLabel(frame, text="")
             from utility import CreateNewUser
@@ -631,24 +631,19 @@ class MainUI:
             messagebox.showerror("Ошибка", "Не удалось обнаружить необходимые файлы. Попробуйте перескачать t.me/watoolx")
             self.app.quit()
         if index == 5:
-            def update():
-                import subprocess
-                import sys
-                update_path = "update.exe"
-                try:
-                    subprocess.Popen([update_path, current_version, LinkID])
-                except Exception as e:
-                    print(e)
-                    messagebox.showerror("Ошибка", "update.exe не обнаружен")
-                sys.exit()
+            def skip():
+                label_update.place_forget()
+                changelod_label.place_forget()
+                continuebtn.place_forget()
+                self.mainmenu(name, status, current_version)
             self.label3.place_forget()
             cleaner = " ".join(changelog.split())
             label_update = ctk.CTkLabel(self.app, text=f"Доступна новая версия v{version}", font=ctk.CTkFont(family="Arial", size=18, weight="bold"))
             label_update.place(x=15, y=75)
             changelod_label = ctk.CTkLabel(self.app, text=changelog, font=ctk.CTkFont(family="Arial", size=15), justify="left", anchor="w")
             changelod_label.place(x=23, y=110)
-            update_button = ctk.CTkButton(self.app, text="Обновить",font=("Arial", 16), command=update)
-            update_button.place(x=23, y=380)
+            continuebtn = ctk.CTkButton(self.app, text="Пропустить", font=ctk.CTkFont(family="Arial", size=18, weight="bold"), height=30, command=skip)
+            continuebtn.place(x=23, y=410)
         if index == 6:
             messagebox.showerror("Ошибка подключения", "Не удалось установить соединения. Возможно отсутствует подключение к интернету.")
             self.app.quit()

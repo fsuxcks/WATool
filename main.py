@@ -1,5 +1,4 @@
 currentversion = "0.91"
-LinkID = "1djfC1Uyz8hhDJBTC4_NA6oPCxEXG0PEr"
 
 import logging
 import traceback
@@ -21,12 +20,12 @@ try:
 
         def startcheck():
             serial = GetSerial()
-            index, version, name, ID, status, changelog = CheckSub(serial, currentversion)
-            result_queue.put((index, version, name, ID, status, changelog))
+            index, version, name, status, changelog = CheckSub(serial, currentversion)
+            result_queue.put((index, version, name, status, changelog))
 
             def startmainmenu():
-                idx, ver, n, ID, s, changelog = result_queue.get()
-                ui.startingerror(idx, ver, ID, currentversion, LinkID, changelog)
+                idx, ver, n, s, changelog = result_queue.get()
+                ui.startingerror(idx, ver, currentversion, changelog, name, status)
                 if idx == 1:
                     ui.mainmenu(n, s, currentversion)
 

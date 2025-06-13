@@ -52,7 +52,7 @@ def CreateNewUser(name, tg):
         sheet.update_cell(user, 2, name)
         sheet.update_cell(user, 6, tg)
         sheet.update_cell(user, 3, "Trial")
-        messagebox.showinfo("Регистрация", "Срок вашего пробного периода закончился. Вам доступна только Trial версия. Пожалуйста перезапустите программу. За покупкой Pro-версии t.me/emil_mmd")
+        messagebox.showinfo("Регистрация", "Срок вашего пробного периода закончился. Вам доступна только Trial версия. Пожалуйста перезапустите программу.")
         return 3
     else:
         newuser = len(trialusers) + 1
@@ -79,24 +79,12 @@ def GetSerial():
     except Exception as e:
         return None
 
-def CheckSerial(serial, currentversion):
-    if os.path.exists("Bin/update.exe"):
-        try:
-            shutil.copy("Bin/update.exe", os.path.join(os.getcwd(), "update.exe"))
-            os.remove("Bin/update.exe")
-        except:
-            pass
-    try:
-        os.remove("Bin/secret.key")
-    except:
-        pass
-
-        
+def CheckSerial(serial, currentversion):    
     try:
         with open("Bin/credentials.enc", "rb") as enc_file:
             encrypted = enc_file.read()
     except:
-        return 1,0,False, 0, 0,0,0
+        return 1,False, 0, 0,0,0
 
     key = "2bTU75QG_VOmNudJy0Pxe136argjyejOBwu3gYgSGEQ="
     fernet = Fernet(key)
@@ -109,13 +97,13 @@ def CheckSerial(serial, currentversion):
         client = gspread.authorize(creds)
         sheet = client.open("Activation").sheet1
     except:
-        return 3,0,0,0,0,0,0
+        return 3,0,0,0,0,0
 
     all_serials = sheet.col_values(1)
     serialcell = sheet.find(serial, in_column=1)
 
     if not serial in all_serials:
-        return 0, 0, False, 0, 0,0,0
+        return 0, False, 0, 0,0,0
 
     name = sheet.cell(serialcell.row, serialcell.col+1).value
     status = sheet.cell(serialcell.row, serialcell.col+2).value
@@ -128,23 +116,23 @@ def CheckSerial(serial, currentversion):
     sheet.update_cell(newlog,8,f"{name} : {convertedtime.hour}:{convertedtime.minute}")
     if version != currentversion:
         changelog = sheet.cell(2,9).value
-        return 2, 0, False, 0, version,0, changelog
+        return 2, False, name, version,status, changelog
 
-    return 0, 0, serial in all_serials, name, version, status, 0
+    return 0, serial in all_serials, name, version, status, 0
 
 def CheckSub(serial, currentversion):
     if serial is None:
-        return 3,0,0,0,0 # Не удалось получить серийный номер
-    error, ID, sub, name, version, status, changelog = CheckSerial(serial, currentversion)
+        return 3,0,0,0 ,0,# Не удалось получить серийный номер
+    error, sub, name, version, status, changelog = CheckSerial(serial, currentversion)
     if error == 1:
-        return 4,0,0,0,0,0 # Не удалось найти нужные файлы
+        return 4,0,0,0,0 # Не удалось найти нужные файлы
     if error == 2:
-        return 5,version,0,0,0,changelog # Версия устарела
+        return 5,version,name,status,changelog # Версия устарела
     if error == 3:
-        return 6,0,0,0,0,0
+        return 6,0,0,0,0
     if not sub:
-        return 2,0,0,ID,0,0
-    return 1,0,name,0,status,0
+        return 2,0,0,0,0
+    return 1,0,name,status,0
 
 
 def load_numbers(filename):
