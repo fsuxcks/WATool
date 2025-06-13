@@ -586,21 +586,26 @@ class MainUI:
     def startingerror(self, index, version, current_version, changelog, name, status):
         def regnewuser():
             errorlabel = ctk.CTkLabel(frame, text="")
+            errorlabel.place(x=20, y=130)
             from utility import CreateNewUser
             name = nickenter.get()
             if name.strip() == "":
                 errorlabel.configure(text="Пожалуйста заполните поле", font=("Arial", 12), text_color="red")
-                errorlabel.place(x=20, y=130)
                 return
             tg = tgenter.get()
             k = CreateNewUser(name, tg)
+            if k == 5:
+                messagebox.showerror("Ошибка", "Не удалось получить серийный номер")
+            if k == 4:
+                messagebox.showerror("Ошибка", "Не удалось подключиться. Возможно отсутствует подключение к интернету")
             if k == 2:
                 errorlabel.configure(text="Имя пользователя занято", font=("Arial", 12), text_color="red")
-                errorlabel.place(x=20, y=130)
                 return
-            errorlabel.configure(text="Успешная регистрация!", font=("Arial", 12), text_color="green")
-            errorlabel.place(x=20, y=130)
-            if k != 3:
+            if k == 3:
+                errorlabel.configure(text="Успешная регистрация!", font=("Arial", 12), text_color="green")
+                messagebox.showinfo("Регистрация", "Срок вашего пробного периода закончился. Вам доступна только Trial версия. Пожалуйста перезапустите программу.")
+            if k == 1:
+                errorlabel.configure(text="Успешная регистрация!", font=("Arial", 12), text_color="green")
                 messagebox.showinfo("Регистрация", "Регистрация завершена! Пожалуйста перезапустите программу.")
             self.app.destroy()
             sys.exit()

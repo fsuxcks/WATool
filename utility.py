@@ -24,7 +24,7 @@ def CreateNewUser(name, tg):
         with open("Bin/credentials.enc", "rb") as enc_file:
             encrypted = enc_file.read()
     except:
-        return 1,0,False, 0, 0,0,0
+        return 5
 
     key = "2bTU75QG_VOmNudJy0Pxe136argjyejOBwu3gYgSGEQ="
     fernet = Fernet(key)
@@ -37,7 +37,7 @@ def CreateNewUser(name, tg):
         client = gspread.authorize(creds)
         sheet = client.open("Activation").sheet1
     except:
-        return False
+        return 4
 
     trialusers = sheet.col_values(5)
 
@@ -52,7 +52,6 @@ def CreateNewUser(name, tg):
         sheet.update_cell(user, 2, name)
         sheet.update_cell(user, 6, tg)
         sheet.update_cell(user, 3, "Trial")
-        messagebox.showinfo("Регистрация", "Срок вашего пробного периода закончился. Вам доступна только Trial версия. Пожалуйста перезапустите программу.")
         return 3
     else:
         newuser = len(trialusers) + 1
@@ -67,7 +66,7 @@ def CreateNewUser(name, tg):
     sheet.update_cell(user, 2, name)
     sheet.update_cell(user, 6, tg)
     sheet.update_cell(user, 3, "Pro")
-    return True
+    return 1
 
 
 def GetSerial():
